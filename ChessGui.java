@@ -54,8 +54,12 @@ public class ChessGui extends Application {
         TableColumn resultCol = new TableColumn("Result");
         resultCol.setCellValueFactory(
             new PropertyValueFactory<ChessGame, String>("result"));
+        TableColumn openingCol = new TableColumn("Opening");
+        openingCol.setCellValueFactory(
+            new PropertyValueFactory<ChessGame, String>("opening"));
         tview.getColumns().addAll(eventCol, siteCol, dateCol, whiteCol,
-            blackCol, resultCol);
+            blackCol, resultCol, openingCol);
+
 
         Button viewGame = new Button("View Game");
         viewGame.setOnAction((event) -> {
@@ -69,6 +73,7 @@ public class ChessGui extends Application {
                 metadata.add("White: " + selGame.getWhite());
                 metadata.add("Black: " + selGame.getBlack());
                 metadata.add("Result: " + selGame.getResult());
+                metadata.add("Opening: " + selGame.getOpening());
 
                 ListView<String> lView = new ListView<>();
                 lView.getItems().addAll(metadata);
