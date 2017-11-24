@@ -94,15 +94,3 @@ public class ChessGame {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

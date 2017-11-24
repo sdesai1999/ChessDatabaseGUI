@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 public class ChessDb {
 
@@ -9,6 +10,22 @@ public class ChessDb {
         games = new ArrayList<>();
         games.add(morphyIsouard());
         games.add(talFischer());
+        String directory = (new File("")).getAbsoluteFile().toString();
+        File dir = new File(directory);
+        File[] tmpPgnFiles = dir.listFiles((file, fileName) -> {
+                return fileName.endsWith(".pgn");
+            });
+        File[] pgnFiles = new File[tmpPgnFiles.length];
+        for (int i = 0; i < pgnFiles.length; i++) {
+            int slashIndex = tmpPgnFiles[i].toString().lastIndexOf("/") + 1;
+            String fileName = tmpPgnFiles[i].toString().substring(slashIndex);
+            pgnFiles[i] = new File(fileName);
+        }
+
+        for (int i = 0; i < pgnFiles.length; i++) {
+            PgnReader reader = new PgnReader(pgnFiles[i].toString());
+            games.add(addGame(reader));
+        }
     }
 
     public List<ChessGame> getGames() {
@@ -89,5 +106,23 @@ public class ChessDb {
         game.addMove("Ne5 1-0");
         return game;
 
+    }
+
+    private ChessGame addGame(PgnReader rdr) {
+        ChessGame game = new ChessGame(
+            rdr.getEvent(),
+            rdr.getSite(),
+            rdr.getDate(),
+            rdr.getWhite(),
+            rdr.getBlack(),
+            rdr.getResult()
+        );
+
+        String[] rdrMoves = rdr.getMoves();
+        for (String move : rdrMoves) {
+            game.addMove(move);
+        }
+
+        return game;
     }
 }
