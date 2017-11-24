@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -52,8 +53,29 @@ public class ChessGui extends Application {
 
         Button viewGame = new Button("View Game");
         viewGame.setOnAction((event) -> {
-                ChessGame selGame = tview.getSelectionModel().getSelectedItem();
                 Stage newStage = new Stage();
+
+                ChessGame selGame = tview.getSelectionModel().getSelectedItem();
+                List<String> metadata = new ArrayList<>();
+                metadata.add("Event: " + selGame.getEvent());
+                metadata.add("Site: " + selGame.getSite());
+                metadata.add("Date: " + selGame.getDate());
+                metadata.add("White: " + selGame.getWhite());
+                metadata.add("Black: " + selGame.getBlack());
+                metadata.add("Result: " + selGame.getResult());
+
+                ListView<String> lView = new ListView<>();
+                lView.getItems().addAll(metadata);
+
+                Button dismiss1 = new Button("Dismiss");
+                dismiss1.setOnAction((newEvent) -> newStage.close());
+
+                VBox vbox1 = new VBox();
+                vbox1.getChildren().addAll(lView, dismiss1);
+                vbox1.setSpacing(5);
+                Scene scene1 = new Scene(vbox1);
+
+                newStage.setScene(scene1);
                 newStage.show();
             });
         ObservableList<ChessGame> selectedItems = tview
