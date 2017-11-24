@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
@@ -16,18 +17,23 @@ import javafx.stage.Stage;
 
 public class ChessGui extends Application {
 
+    private ChessDb db = new ChessDb();
+    private TableView<ChessGame> tview = new TableView<>();
+    private List<ChessGame> list = db.getGames();
+    private ObservableList<ChessGame> elements = FXCollections
+                                                .observableArrayList(list);
+    private TextField searchField = new TextField();
+
     @Override
     @SuppressWarnings("unchecked")
     public void start(Stage stage) {
-        ChessDb db = new ChessDb();
-        List<ChessGame> list = db.getGames();
+        // ChessDb db = new ChessDb();
+        // List<ChessGame> list = db.getGames();
 
-        TableView<ChessGame> tview = new TableView<>();
+        // TableView<ChessGame> tview = new TableView<>();
 
-        ObservableList<ChessGame> elements = FXCollections
-                                            .observableArrayList(list);
-
-        ListView<ChessGame> listView = new ListView<>(elements);
+        // ObservableList<ChessGame> elements = FXCollections
+        //                                     .observableArrayList(list);
         tview.setItems(elements);
 
         TableColumn eventCol = new TableColumn("Event");
@@ -86,9 +92,14 @@ public class ChessGui extends Application {
         Button dismiss = new Button("Dismiss");
         dismiss.setOnAction((event) -> System.exit(0));
 
+        searchField.setPromptText("Filter");
+        searchField.textProperty().addListener((obs, oldText, newText) -> {
+                searchFilter(newText);
+            });
+
         VBox vbox = new VBox();
         HBox hbox = new HBox();
-        hbox.getChildren().addAll(viewGame, dismiss);
+        hbox.getChildren().addAll(viewGame, dismiss, searchField);
         hbox.setSpacing(5);
         vbox.getChildren().addAll(tview, hbox);
         vbox.setSpacing(5);
@@ -98,25 +109,33 @@ public class ChessGui extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    @SuppressWarnings("unchecked")
+    private void searchFilter(String text) {
+        if (searchField.textProperty().get().isEmpty()) {
+            tview.setItems(elements);
+            return;
+        }
+
+        ObservableList<ChessGame> newTableRows = FXCollections
+                                                .observableArrayList();
+        ObservableList<TableColumn<ChessGame, ?>> tableCols = tview
+                                                             .getColumns();
+        for (int i = 0; i < elements.size(); i++) {
+            boolean toContinue = true;
+            for (int j = 0; j < tableCols.size(); j++) {
+                TableColumn testCol = tableCols.get(j);
+                String currCellText = testCol
+                                     .getCellData(elements.get(i))
+                                     .toString()
+                                     .toLowerCase();
+                if (currCellText.contains(text.toLowerCase()) && toContinue) {
+                    newTableRows.add(elements.get(i));
+                    toContinue = false;
+                }
+            }
+        }
+
+        tview.setItems(newTableRows);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
