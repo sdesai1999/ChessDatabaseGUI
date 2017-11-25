@@ -2,10 +2,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 
+/**
+ * Class that represents a chess database, holds information about multiple
+ * chess games.
+ *
+ * @author cs1331 instructor
+ * @author sdesai88
+ * @version 11/25/17
+*/
 public class ChessDb {
 
     private List<ChessGame> games;
 
+    /**
+     * Creates an instance of ChessDb by adding ChessGames to a list.
+     * Also adds all .pgn files to the list that are in the same directory as
+     * this file.
+    */
     public ChessDb() {
         games = new ArrayList<>();
         games.add(morphyIsouard());
@@ -28,6 +41,9 @@ public class ChessDb {
         }
     }
 
+    /**
+     * @return the list of ChessGames
+    */
     public List<ChessGame> getGames() {
         return games;
     }

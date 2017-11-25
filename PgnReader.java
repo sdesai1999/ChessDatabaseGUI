@@ -4,6 +4,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Class that helps with reading .pgn files, finds metadata about the game, and
+ * finds the moves of the game
+ *
+ * @author sdesai88
+ * @version 11/25/17
+*/
 public class PgnReader {
 
     private String game;
@@ -15,6 +22,12 @@ public class PgnReader {
     private String result;
     private String[] moves;
 
+    /**
+     * Constructor for PgnReader class; creates an instance of PgnReader with a
+     * String containing the .pgn file name.
+     *
+     * @param file : String with the name of the file
+    */
     public PgnReader(String file) {
         this.game = fileContent(file);
         this.event = tagValue("Event");
@@ -26,7 +39,9 @@ public class PgnReader {
         this.moves = parseFileForMoves();
     }
 
-    public String fileContent(String path) {
+    private String fileContent(String path) {
+        // NOTE: this method was not written by me, it was provided on the hw1
+        // website, probably written by Prof. Simpkins
         Path file = Paths.get(path);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = Files.newBufferedReader(file)) {
@@ -77,7 +92,7 @@ public class PgnReader {
         }
 
         if (!gameExists) {
-            return new String[0];
+            return new String[0]; // if there is no first move
         }
 
         String[] tmpMoves = gameMovesOnly.split("\\s+");
@@ -97,51 +112,72 @@ public class PgnReader {
             }
         }
 
-        String[] moves = new String[0];
+        String[] realMoves = new String[0];
         if (moves1.length % 2 == 0) {
-            moves = new String[moves1.length / 2];
+            realMoves = new String[moves1.length / 2];
         } else {
-            moves = new String[(moves1.length / 2) + 1];
+            realMoves = new String[(moves1.length / 2) + 1];
         }
 
         int movesCounter = 0;
         for (int i = 0; i < moves1.length; i += 2) {
             if (i != moves1.length - 1) {
-                moves[movesCounter] = moves1[i] + " " + moves1[i + 1];
+                realMoves[movesCounter] = moves1[i] + " " + moves1[i + 1];
                 movesCounter++;
             } else {
-                moves[movesCounter] = moves1[i];
+                realMoves[movesCounter] = moves1[i];
                 movesCounter++;
             }
         }
 
-        return moves;
+        return realMoves;
     }
 
+    /**
+     * @return the event
+    */
     public String getEvent() {
         return this.event;
     }
 
+    /**
+     * @return the site
+    */
     public String getSite() {
         return this.site;
     }
 
+    /**
+     * @return the date
+    */
     public String getDate() {
         return this.date;
     }
 
+    /**
+     * @return white player
+    */
     public String getWhite() {
         return this.white;
     }
 
+    /**
+     * @return black player
+    */
     public String getBlack() {
         return this.black;
     }
 
+    /**
+     * @return the result
+    */
     public String getResult() {
         return this.result;
     }
 
+    /**
+     * @return the moves of the game
+    */
     public String[] getMoves() {
         return this.moves;
     }

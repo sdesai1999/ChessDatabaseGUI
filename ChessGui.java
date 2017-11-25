@@ -15,6 +15,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Creates a GUI to show information about ChessGames.
+ *
+ * @author sdesai88
+ * @version 11/25/17
+*/
 public class ChessGui extends Application {
 
     private ChessDb db = new ChessDb();
@@ -27,13 +33,6 @@ public class ChessGui extends Application {
     @Override
     @SuppressWarnings("unchecked")
     public void start(Stage stage) {
-        // ChessDb db = new ChessDb();
-        // List<ChessGame> list = db.getGames();
-
-        // TableView<ChessGame> tview = new TableView<>();
-
-        // ObservableList<ChessGame> elements = FXCollections
-        //                                     .observableArrayList(list);
         tview.setItems(elements);
 
         TableColumn eventCol = new TableColumn("Event");
@@ -61,19 +60,33 @@ public class ChessGui extends Application {
             blackCol, resultCol, openingCol);
 
 
-        Button viewGame = new Button("View Game");
+        Button viewGame = new Button("View");
         viewGame.setOnAction((event) -> {
                 Stage newStage = new Stage();
 
-                ChessGame selGame = tview.getSelectionModel().getSelectedItem();
+                ChessGame game = tview.getSelectionModel().getSelectedItem();
                 List<String> metadata = new ArrayList<>();
-                metadata.add("Event: " + selGame.getEvent());
-                metadata.add("Site: " + selGame.getSite());
-                metadata.add("Date: " + selGame.getDate());
-                metadata.add("White: " + selGame.getWhite());
-                metadata.add("Black: " + selGame.getBlack());
-                metadata.add("Result: " + selGame.getResult());
-                metadata.add("Opening: " + selGame.getOpening());
+                metadata.add("Event: " + game.getEvent());
+                metadata.add("Site: " + game.getSite());
+                metadata.add("Date: " + game.getDate());
+                metadata.add("White: " + game.getWhite());
+                metadata.add("Black: " + game.getBlack());
+                metadata.add("Result: " + game.getResult());
+                metadata.add("Opening: " + game.getOpening());
+                metadata.add("");
+                metadata.add("Moves:");
+
+                boolean hasNextMove = true;
+                int count = 1;
+                while (hasNextMove) {
+                    try {
+                        String currMove = (count) + ". " + game.getMove(count);
+                        metadata.add(currMove);
+                        count++;
+                    } catch (IndexOutOfBoundsException e) {
+                        hasNextMove = false;
+                    }
+                }
 
                 ListView<String> lView = new ListView<>();
                 lView.getItems().addAll(metadata);
@@ -87,6 +100,7 @@ public class ChessGui extends Application {
                 Scene scene1 = new Scene(vbox1);
 
                 newStage.setScene(scene1);
+                newStage.setWidth(500);
                 newStage.show();
             });
         ObservableList<ChessGame> selectedItems = tview
@@ -112,6 +126,7 @@ public class ChessGui extends Application {
         Scene scene = new Scene(vbox);
         stage.setTitle("Chess Database GUI");
         stage.setScene(scene);
+        stage.setWidth(1350);
         stage.show();
     }
 
