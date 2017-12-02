@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  * Creates a GUI to show information about ChessGames.
  *
  * @author sdesai88
- * @version 11/25/17
+ * @version 12/01/17
 */
 public class ChessGui extends Application {
 
@@ -101,6 +101,7 @@ public class ChessGui extends Application {
 
                 newStage.setScene(scene1);
                 newStage.setWidth(500);
+                newStage.setTitle(game.getEvent());
                 newStage.show();
             });
         ObservableList<ChessGame> selectedItems = tview

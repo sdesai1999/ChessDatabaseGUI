@@ -9,7 +9,7 @@ import java.nio.file.Paths;
  * finds the moves of the game
  *
  * @author sdesai88
- * @version 11/25/17
+ * @version 12/01/17
 */
 public class PgnReader {
 
@@ -54,8 +54,8 @@ public class PgnReader {
             System.err.format("IOException: %s%n", e);
             System.exit(1);
         }
-        game = sb.toString();
-        return game;
+
+        return sb.toString();
     }
 
     private String tagValue(String tagName) {

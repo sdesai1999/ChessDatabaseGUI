@@ -8,7 +8,7 @@ import java.io.File;
  *
  * @author cs1331 instructor
  * @author sdesai88
- * @version 11/25/17
+ * @version 12/01/17
 */
 public class ChessDb {
 
@@ -134,8 +134,7 @@ public class ChessDb {
             rdr.getResult()
         );
 
-        String[] rdrMoves = rdr.getMoves();
-        for (String move : rdrMoves) {
+        for (String move : rdr.getMoves()) {
             game.addMove(move);
         }
 
